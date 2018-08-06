@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/BurntSushi/toml"
-	run "github.com/nirnanaaa/cloudive-mailer/run/master/cmd"
+	run "github.com/nirnanaaa/cloudive-mailer/run/mailer/cmd"
 	"github.com/sirupsen/logrus"
 )
 
