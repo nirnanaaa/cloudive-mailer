@@ -14,9 +14,9 @@ Packages are available via docker hub:
 
 docker run \
     --rm -ti -p 9009:9009 \
-    -e CLOUDIVE_KAFKA_BROKERS=kafka:9092 \
     -e CLOUDIVE_HTTPD_ENABLED=true \ # prometheus metrics and /mail endpoint
     -e CLOUDIVE_HTTPD_BIND_ADDRESS=0.0.0.0:9092 \
+    -e CLOUDIVE_KAFKA_BROKERS=kafka:9092 \
     -e CLOUDIVE_KAFKA_INBOUND_QUEUE=mail \ # where mails get accepted from within the internal network
     -e CLOUDIVE_KAFKA_OUTBOUND_QUEUE=mail-worker-queue \ # jobs are forwarded to an internal queue
     cloudive/mailer master
@@ -24,8 +24,8 @@ docker run \
 docker run \
     --rm -ti \
     -e CLOUDIVE_KAFKA_BROKERS=kafka:9092 \
-    -e CLOUDIVE_SMTP_ENABLED=true \
     -e CLOUDIVE_KAFKA_INBOUND_QUEUE=mail-worker-queue \ # where mails get accepted from within the internal network
+    -e CLOUDIVE_SMTP_ENABLED=true \
     -e CLOUDIVE_SMTP_HOSTNAME=smtp.office365.com \
     -e CLOUDIVE_SMTP_PORT=587 \
     -e CLOUDIVE_SMTP_USERNAME="someguy@somedomain.com" \
