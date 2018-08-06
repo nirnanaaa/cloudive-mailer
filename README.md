@@ -1,8 +1,11 @@
-# Distributed Mailing
+# HTTP to SMTP Gateway
 
 [![CircleCI](https://circleci.com/gh/nirnanaaa/cloudive-mailer.svg?style=svg)](https://circleci.com/gh/nirnanaaa/cloudive-mailer)
 
-## Installation
+Cloudive mailer is offered in two run modes: a distributed, gateway-worker mode and a more minimalistic standalone mode. In Standalone mode all mail processing happens
+within the same process and may overload your server.
+
+## Distributed mode
 
 Packages are available via docker hub:
 
@@ -12,22 +15,28 @@ Packages are available via docker hub:
 docker run \
     --rm -ti -p 9009:9009 \
     -e CLOUDIVE_KAFKA_BROKERS=kafka:9092 \
+    -e CLOUDIVE_HTTPD_ENABLED=true \ # prometheus metrics and /mail endpoint
+    -e CLOUDIVE_HTTPD_BIND_ADDRESS=0.0.0.0:9092 \
+    -e CLOUDIVE_KAFKA_INBOUND_QUEUE=mail \ # where mails get accepted from within the internal network
+    -e CLOUDIVE_KAFKA_OUTBOUND_QUEUE=mail-worker-queue \ # jobs are forwarded to an internal queue
     cloudive/mailer master
 
 docker run \
-    --rm -ti -e CLOUDIVE_KAFKA_BROKERS=kafka:9092 \
-    --rm -ti -e CLOUDIVE_SMTP_ENABLED=true \
-    --rm -ti -e CLOUDIVE_SMTP_HOSTNAME=smtp.office365.com \
-    --rm -ti -e CLOUDIVE_SMTP_PORT=587 \
-    --rm -ti -e CLOUDIVE_SMTP_USERNAME="someguy@somedomain.com" \
-    --rm -ti -e CLOUDIVE_SMTP_PASSWORD="someguy" \
-    --rm -ti -e CLOUDIVE_SMTP_FROM_NAME="someguy" \
-    --rm -ti -e CLOUDIVE_SMTP_FROM_MAIL="someguy@somedomain.com" \
+    --rm -ti \
+    -e CLOUDIVE_KAFKA_BROKERS=kafka:9092 \
+    -e CLOUDIVE_SMTP_ENABLED=true \
+    -e CLOUDIVE_KAFKA_INBOUND_QUEUE=mail-worker-queue \ # where mails get accepted from within the internal network
+    -e CLOUDIVE_SMTP_HOSTNAME=smtp.office365.com \
+    -e CLOUDIVE_SMTP_PORT=587 \
+    -e CLOUDIVE_SMTP_USERNAME="someguy@somedomain.com" \
+    -e CLOUDIVE_SMTP_PASSWORD="someguy" \
+    -e CLOUDIVE_SMTP_FROM_NAME="someguy" \
+    -e CLOUDIVE_SMTP_FROM_MAIL="someguy@somedomain.com" \
     cloudive/mailer worker
 ```
 
 
-## Usage
+### Usage
 
 ```bash
 curl -X POST \
