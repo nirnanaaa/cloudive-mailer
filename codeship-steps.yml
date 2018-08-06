@@ -1,0 +1,40 @@
+- service: "test"
+  working_dir: /go/src/github.com/nirnanaaa/cloudive-mailer
+  command: "./codeship-test.sh"
+  name: "build + test"
+
+
+- type: parallel
+  steps:
+  - name: Push Worker Image on branch
+    service: worker-prod
+    type: push
+    tag: ^(master|develop|\d+?)
+    image_name: digitalrepublic/multimedia-worker
+    image_tag: "{{.Branch}}"
+    encrypted_dockercfg_path: dockercfg.encrypted
+  - name: Push Worker Image on tag
+    service: worker-prod
+    type: push
+    tag: ^(master|develop|\d+?)
+    image_name: digitalrepublic/multimedia-worker
+    image_tag: "{{.CommitDescription}}"
+    encrypted_dockercfg_path: dockercfg.encrypted
+  - name: Push Master Image on branch
+    service: master-prod
+    type: push
+    tag: ^(master|develop|\d+?)
+    image_name: digitalrepublic/cloudive-mailer
+    image_tag: "{{.Branch}}"
+    encrypted_dockercfg_path: dockercfg.encrypted
+  - name: Push Master Image on tag
+    service: master-prod
+    type: push
+    tag: ^(master|develop|\d+?)
+    image_name: digitalrepublic/cloudive-mailer
+    image_tag: "{{.CommitDescription}}"
+    encrypted_dockercfg_path: dockercfg.encrypted
+- name: Deploy onto kubernetes
+  service: deploy-kube
+  working_dir: /app/k8s
+  command: ./deploy.sh

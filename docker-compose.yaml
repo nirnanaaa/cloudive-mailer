@@ -15,7 +15,7 @@ services:
     #         CLOUDIVE_S3_SECRET_ACCESS_KEY: "0vHZesPBciElr7+vnRB2DTzpXzp9uVkmjhaTbeat"
     #         CLOUDIVE_S3_SSL_ENABLED: "false"
     # filter:
-    #     image: digitalrepublic/cloudive-thumber
+    #     image: digitalrepublic/cloudive-mailer
     #     build:
     #       context: .
     #       dockerfile: docker/master/Dockerfile

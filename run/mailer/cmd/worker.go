@@ -22,7 +22,7 @@ type WorkerService interface {
 	Stop() error
 }
 
-// Command represents the command executed by "cloudive-thumber run".
+// Command represents the command executed by "cloudive-mailer run".
 type WorkerCommand struct {
 	Version   string
 	Branch    string
@@ -137,12 +137,12 @@ type WorkerOptions struct {
 	Action     string
 }
 
-var workerUsage = `Runs the cloudive-thumber Listener server.
-Usage: cloudive-thumber<cmd> run [flags]
+var workerUsage = `Runs the cloudive-mailer Listener server.
+Usage: cloudive-mailer<cmd> run [flags]
     -config <path>
             Set the path to the configuration file.
             This defaults to the environment variable CLOUDIVE_CONFIG_PATH,
-            ~/.cloudive/thumber.conf, or /etc/cloudive/thumber.conf if a file
+            ~/.cloudive/mailer.conf, or /etc/cloudive/mailer.conf if a file
             is present at any of these locations.
             Disable the automatic loading of a configuration file using
             the null device (such as /dev/null).

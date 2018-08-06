@@ -17,7 +17,7 @@ import argparse
 ################
 
 # Packaging variables
-PACKAGE_NAME = "thumber"
+PACKAGE_NAME = "mailer"
 INSTALL_ROOT_DIR = "/usr/bin"
 LOG_DIR = "/var/log/cloudive"
 DATA_DIR = "/var/lib/cloudive"
@@ -35,7 +35,7 @@ LOGROTATE_SCRIPT = "scripts/logrotate"
 DEFAULT_CONFIG = "conf/config.sample.toml"
 
 # Default AWS S3 bucket for uploads
-DEFAULT_BUCKET = "dl/cloudive-thumber/artifacts"
+DEFAULT_BUCKET = "dl/cloudive-mailer/artifacts"
 
 CONFIGURATION_FILES = [
     CONFIG_DIR + '/cloudive.conf',
@@ -46,7 +46,7 @@ PACKAGE_LICENSE = "PROP"
 PACKAGE_URL = "https://github.com/nirnanaaa/cloudive-mailer"
 MAINTAINER = "flo.fk44@gmail.com"
 VENDOR = "vendor"
-DESCRIPTION = "Roove."
+DESCRIPTION = "Cloudive Mailer."
 
 prereqs = [ 'git', 'go' ]
 go_vet_command = "go tool vet ./"
