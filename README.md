@@ -30,8 +30,8 @@ docker run \
     -e CLOUDIVE_SMTP_PORT=587 \
     -e CLOUDIVE_SMTP_USERNAME="someguy@somedomain.com" \
     -e CLOUDIVE_SMTP_PASSWORD="someguy" \
-    -e CLOUDIVE_SMTP_FROM_NAME="someguy" \
-    -e CLOUDIVE_SMTP_FROM_MAIL="someguy@somedomain.com" \
+    -e CLOUDIVE_SMTP_FROM_NAME="someguy" \ # Default settings
+    -e CLOUDIVE_SMTP_FROM_MAIL="someguy@somedomain.com" \ # Default settings
     cloudive/mailer worker
 ```
 
@@ -44,11 +44,13 @@ curl -X POST \
   -H 'Cache-Control: no-cache' \
   -H 'Content-Type: application/json' \
   -d '{
-	"trace_id": "1234",
 	"recipient": {
 		"name": "Florian Kasper",
-		"email": "someguy@somedomain.com",
-		"tracking_id": "1234"
+		"email": "someguy@somedomain.com"
+	},
+	"sender": {
+		"name": "Florian Kasper",
+		"email": "someguy@somedomain.com"
 	},
 	"subject": "test",
 	"payload": "YWxwaGEgYmV0dGEgZ2FtbWE=",
