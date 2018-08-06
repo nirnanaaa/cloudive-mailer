@@ -4,7 +4,7 @@
 
 Packages are available via docker hub:
 
-```sh
+```bash
 # start up kafka
 
 docker run \
@@ -26,7 +26,7 @@ docker run \
 
 ## Usage
 
-```
+```bash
 curl -X POST \
   http://localhost:9009/mail \
   -H 'Cache-Control: no-cache' \
