@@ -1,5 +1,7 @@
 # Distributed Mailing
 
+[![CircleCI](https://circleci.com/gh/nirnanaaa/cloudive-mailer.svg?style=svg)](https://circleci.com/gh/nirnanaaa/cloudive-mailer)
+
 ## Installation
 
 Packages are available via docker hub:
