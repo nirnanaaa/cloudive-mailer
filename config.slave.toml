@@ -1,0 +1,22 @@
+[kafka]
+  brokers = ["localhost:9092"]
+  inbound-queue = "mail-worker-queue"
+  outbound-queue = "mail"
+  group = "mail-processor-name"
+
+[meta]
+  log-level = "debug"
+
+[httpd]
+  enabled = false
+  bind-address = "127.0.0.1:9009"
+
+[smtp]
+  enabled = true
+  hostname = ""
+  port = 587
+  username = ""
+  password = ""
+  from-name = "Cloudive"
+  from-mail = ""
+

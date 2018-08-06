@@ -1,0 +1,11 @@
+[meta]
+  log-level = "debug"
+
+[httpd]
+  enabled = true
+  bind-address = "0.0.0.0:9009"
+
+[kafka]
+  brokers = ["localhost:9092"]
+  inbound-queue = "mail"
+  outbound-queue = "mail-worker-queue"

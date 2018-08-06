@@ -1,0 +1,47 @@
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: {{ template "thumb-service.fullname" . }}-worker
+  labels:
+    app: {{ template "thumb-service.name" . }}
+    chart: {{ template "thumb-service.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+    role: worker
+spec:
+  replicas: {{ .Values.worker.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ template "thumb-service.name" . }}
+      release: {{ .Release.Name }}
+      role: worker
+  template:
+    metadata:
+      labels:
+        app: {{ template "thumb-service.name" . }}
+        release: {{ .Release.Name }}
+        role: worker
+    spec:
+      imagePullSecrets:
+        - name: regsecret
+      containers:
+        - name: {{ .Chart.Name }}-worker
+          image: "{{ .Values.worker.image.repository }}:{{ .Values.worker.image.tag }}"
+          imagePullPolicy: {{ .Values.worker.image.pullPolicy }}
+          env:
+          - name: ROOVE_KAFKA_BROKERS
+            value: {{.Values.kafka.brokers}}
+          resources:
+{{ toYaml .Values.resources | indent 12 }}
+    {{- with .Values.nodeSelector }}
+      nodeSelector:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+{{ toYaml . | indent 8 }}
+    {{- end }}

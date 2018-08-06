@@ -1,0 +1,6 @@
+build/
+yarn-error.log
+storage/
+node_modules/
+codeship.aes
+kube.env
