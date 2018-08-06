@@ -6,6 +6,7 @@ import (
 	"mime"
 	"net/http"
 	"net/mail"
+	"net/url"
 	"time"
 
 	"github.com/sirupsen/logrus"
@@ -54,6 +55,23 @@ func (s *Service) DownloadAttachment(url string) (io.Reader, error) {
 	}
 	return resp.Body, nil
 }
+
+// CheckAttachmentForDomainWhitelist checks if a requesting domain is whitelisted inside our config.
+func (s *Service) CheckAttachmentForDomainWhitelist(inputURL string) error {
+	u, err := url.Parse(inputURL)
+	if err != nil {
+		return err
+	}
+	hostname := u.Hostname()
+	for _, entry := range s.Config.DomainWhitelist {
+		if hostname == entry {
+			return nil
+		}
+	}
+	return fmt.Errorf("Domain %s is not whitelisted", hostname)
+}
+
+// TODO: Replace with re-queueing
 func (s *Service) Deliver(u *OutboundEmailEvent, tries int) {
 	if !s.Config.Enabled {
 		return
@@ -64,7 +82,7 @@ func (s *Service) Deliver(u *OutboundEmailEvent, tries int) {
 
 	d := NewDialer(s.Config.Hostname, s.Config.Port, s.Config.Username, s.Config.Password)
 	m := gomail.NewMessage()
-	from := formatEmail(s.Config.FromName, s.Config.FromMail)
+	from := formatEmail(u.Sender.Name, u.Sender.Email)
 	to := formatEmail(u.Recipient.Name, u.Recipient.Email)
 	m.SetHeader("From", from)
 	m.SetHeader("To", to)
@@ -73,6 +91,12 @@ func (s *Service) Deliver(u *OutboundEmailEvent, tries int) {
 	m.SetBody("text/html", htmlData)
 
 	for _, attachment := range u.Attachments {
+		if s.Config.AttachmentDomainWhitelistEnabled {
+			if err := s.CheckAttachmentForDomainWhitelist(attachment.URL); err != nil {
+				logrus.WithError(err).Warnf("Attachment Domain whitelisting is enabled and URL does not match whitelist: %s", attachment.URL)
+				continue
+			}
+		}
 		m.Attach(attachment.Name, gomail.SetCopyFunc(func(w io.Writer) error {
 			r, err := s.DownloadAttachment(attachment.URL)
 			if err != nil {

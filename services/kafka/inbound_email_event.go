@@ -17,6 +17,7 @@ type InboundEmailEvent struct {
 	// For tracing with zipkin or jaeger
 	TraceID   string  `json:"trace_id,omitempty"`
 	Recipient Contact `json:"recipient"`
+	Sender    Contact `json:"sender"`
 
 	Subject string `json:"subject"`
 	Payload []byte `json:"payload"`
