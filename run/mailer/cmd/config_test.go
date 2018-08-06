@@ -72,11 +72,11 @@ func TestConfig_Parse_EnvOverride(t *testing.T) {
 
 	getenv := func(s string) string {
 		switch s {
-		case "ROOVE_KAFKA_BROKERS":
+		case "CLOUDIVE_KAFKA_BROKERS":
 			return "kafka-1:9092"
-		case "ROOVE_HTTPD_BIND_ADDRESS":
+		case "CLOUDIVE_HTTPD_BIND_ADDRESS":
 			return ":1234"
-		case "ROOVE_META_LOG_LEVEL":
+		case "CLOUDIVE_META_LOG_LEVEL":
 			return "warning"
 		}
 		return ""

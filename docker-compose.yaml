@@ -10,22 +10,22 @@ services:
     #       context: .
     #       dockerfile: docker/multimedia-worker/Dockerfile
     #     environment:
-    #         ROOVE_S3_ENDPOINT: "minio:9000"
-    #         ROOVE_S3_ACCESS_KEY_ID: "WN1GBWAZZ9FFBKJBKKOG"
-    #         ROOVE_S3_SECRET_ACCESS_KEY: "0vHZesPBciElr7+vnRB2DTzpXzp9uVkmjhaTbeat"
-    #         ROOVE_S3_SSL_ENABLED: "false"
+    #         CLOUDIVE_S3_ENDPOINT: "minio:9000"
+    #         CLOUDIVE_S3_ACCESS_KEY_ID: "WN1GBWAZZ9FFBKJBKKOG"
+    #         CLOUDIVE_S3_SECRET_ACCESS_KEY: "0vHZesPBciElr7+vnRB2DTzpXzp9uVkmjhaTbeat"
+    #         CLOUDIVE_S3_SSL_ENABLED: "false"
     # filter:
-    #     image: digitalrepublic/roove-thumber
+    #     image: digitalrepublic/cloudive-thumber
     #     build:
     #       context: .
     #       dockerfile: docker/master/Dockerfile
     #     environment:
-    #         ROOVE_KAFKA_INBOUND_QUEUE: "s3notifications"
-    #         ROOVE_KAFKA_OUTBOUND_QUEUE: "thumb-worker-queue"
-    #         ROOVE_S3_ENDPOINT: "minio:9000"
-    #         ROOVE_S3_ACCESS_KEY_ID: "WN1GBWAZZ9FFBKJBKKOG"
-    #         ROOVE_S3_SECRET_ACCESS_KEY: "0vHZesPBciElr7+vnRB2DTzpXzp9uVkmjhaTbeat"
-    #         ROOVE_S3_SSL_ENABLED: "false"
+    #         CLOUDIVE_KAFKA_INBOUND_QUEUE: "s3notifications"
+    #         CLOUDIVE_KAFKA_OUTBOUND_QUEUE: "thumb-worker-queue"
+    #         CLOUDIVE_S3_ENDPOINT: "minio:9000"
+    #         CLOUDIVE_S3_ACCESS_KEY_ID: "WN1GBWAZZ9FFBKJBKKOG"
+    #         CLOUDIVE_S3_SECRET_ACCESS_KEY: "0vHZesPBciElr7+vnRB2DTzpXzp9uVkmjhaTbeat"
+    #         CLOUDIVE_S3_SSL_ENABLED: "false"
     # minio:
     #     build:
     #       context: .

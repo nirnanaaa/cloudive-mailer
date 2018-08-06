@@ -13,21 +13,21 @@ import logging
 import argparse
 
 ################
-#### roove Variables
+#### cloudive Variables
 ################
 
 # Packaging variables
 PACKAGE_NAME = "thumber"
 INSTALL_ROOT_DIR = "/usr/bin"
-LOG_DIR = "/var/log/roove"
-DATA_DIR = "/var/lib/roove"
-SCRIPT_DIR = "/usr/lib/roove/scripts"
-CONFIG_DIR = "/etc/roove"
+LOG_DIR = "/var/log/cloudive"
+DATA_DIR = "/var/lib/cloudive"
+SCRIPT_DIR = "/usr/lib/cloudive/scripts"
+CONFIG_DIR = "/etc/cloudive"
 LOGROTATE_DIR = "/etc/logrotate.d"
 MAN_DIR = "/usr/share/man"
 
 INIT_SCRIPT = "scripts/init.sh"
-SYSTEMD_SCRIPT = "scripts/roove.service"
+SYSTEMD_SCRIPT = "scripts/cloudive.service"
 PREINST_SCRIPT = "scripts/pre-install.sh"
 POSTINST_SCRIPT = "scripts/post-install.sh"
 POSTUNINST_SCRIPT = "scripts/post-uninstall.sh"
@@ -35,11 +35,11 @@ LOGROTATE_SCRIPT = "scripts/logrotate"
 DEFAULT_CONFIG = "conf/config.sample.toml"
 
 # Default AWS S3 bucket for uploads
-DEFAULT_BUCKET = "dl.roove.io/roove-thumber/artifacts"
+DEFAULT_BUCKET = "dl/cloudive-thumber/artifacts"
 
 CONFIGURATION_FILES = [
-    CONFIG_DIR + '/roove.conf',
-    LOGROTATE_DIR + '/roove',
+    CONFIG_DIR + '/cloudive.conf',
+    LOGROTATE_DIR + '/cloudive',
     ]
 
 PACKAGE_LICENSE = "PROP"
@@ -53,8 +53,7 @@ go_vet_command = "go tool vet ./"
 optional_prereqs = [ 'rpmbuild', 'gpg', 'sls' ]
 
 targets = {
-    'roove-thumber': './run/roove-thumber',
-    'multimedia-worker': './run/multimedia-worker',
+    'cloudive-mailer': './run/mailer',
 }
 
 supported_builds = {
@@ -70,7 +69,7 @@ supported_packages = {
 }
 
 ################
-#### roove Functions
+#### cloudive Functions
 ################
 
 def print_banner():
@@ -104,12 +103,12 @@ def package_scripts(build_root, config_only=False, windows=False):
     """
     if config_only:
         logging.debug("Copying configuration to build directory.")
-        shutil.copyfile(DEFAULT_CONFIG, os.path.join(build_root, "roove.conf"))
-        os.chmod(os.path.join(build_root, "roove.conf"), 0o644)
+        shutil.copyfile(DEFAULT_CONFIG, os.path.join(build_root, "cloudive.conf"))
+        os.chmod(os.path.join(build_root, "cloudive.conf"), 0o644)
     else:
         logging.debug("Copying scripts and sample configuration to build directory.")
-        shutil.copyfile(DEFAULT_CONFIG, os.path.join(build_root, CONFIG_DIR[1:], "roove.conf"))
-        os.chmod(os.path.join(build_root, CONFIG_DIR[1:], "roove.conf"), 0o644)
+        shutil.copyfile(DEFAULT_CONFIG, os.path.join(build_root, CONFIG_DIR[1:], "cloudive.conf"))
+        os.chmod(os.path.join(build_root, CONFIG_DIR[1:], "cloudive.conf"), 0o644)
 
 def run_generate():
     """Run 'go generate' to rebuild any static assets.
@@ -177,7 +176,7 @@ def run_tests(race, parallel, timeout, no_vet):
     return True
 
 ################
-#### All roove-specific content above this line
+#### All cloudive-specific content above this line
 ################
 
 def run(command, allow_failure=False, shell=False):
@@ -613,10 +612,10 @@ def package(build_output, pkg_name, version, nightly=False, iteration=1, static=
         shutil.rmtree(tmp_build_dir)
 def deploy(outdir="./build"):
     logging.info("Sending packages via rsync to destination.")
-    # p = subprocess.Popen(['rsync', '--info=progress2', '-av', "{}/*".format(outdir), "roove:"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    # p = subprocess.Popen(['rsync', '--info=progress2', '-av', "{}/*".format(outdir), "cloudive:"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     # output, err = p.communicate()
     # rc = p.returncode
-    run("rsync -av {}/* roove:".format(outdir), shell=True)
+    run("rsync -av {}/* cloudive:".format(outdir), shell=True)
 
 def main(args):
     global PACKAGE_NAME
@@ -732,7 +731,7 @@ if __name__ == '__main__':
     logging.basicConfig(level=LOG_LEVEL,
                         format=log_format)
 
-    parser = argparse.ArgumentParser(description='roove build and packaging script.')
+    parser = argparse.ArgumentParser(description='cloudive build and packaging script.')
     parser.add_argument('--verbose','-v','--debug',
                         action='store_true',
                         help='Use debug output')
@@ -781,7 +780,7 @@ if __name__ == '__main__':
                         help='Deploy to AWS')
     parser.add_argument('--stats',
                         action='store_true',
-                        help='Emit build metrics (requires roove Python client)')
+                        help='Emit build metrics (requires cloudive Python client)')
     parser.add_argument('--nightly',
                         action='store_true',
                         help='Mark build output as nightly build (will incremement the minor version)')

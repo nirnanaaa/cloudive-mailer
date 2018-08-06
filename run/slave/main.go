@@ -115,7 +115,7 @@ func (m *Main) Run(args ...string) error {
 			return fmt.Errorf("version: %s", err)
 		}
 	default:
-		return fmt.Errorf(`unknown command "%s"`+"\n"+`Run 'roove-thumber help' for usage`+"\n\n", name)
+		return fmt.Errorf(`unknown command "%s"`+"\n"+`Run 'cloudive-thumber help' for usage`+"\n\n", name)
 	}
 
 	return nil
@@ -146,7 +146,7 @@ func ParseCommandName(args []string) (string, []string) {
 	return "", args
 }
 
-// VersionCommand represents the command executed by "roove-thumber version".
+// VersionCommand represents the command executed by "cloudive-thumber version".
 type VersionCommand struct {
 	Stdout io.Writer
 	Stderr io.Writer
@@ -170,11 +170,11 @@ func (cmd *VersionCommand) Run(args ...string) error {
 	}
 
 	// Print version info.
-	fmt.Fprintf(cmd.Stdout, "ROOVE Thumber v%s (git: %s %s)\n", version, branch, commit)
+	fmt.Fprintf(cmd.Stdout, "CLOUDIVE Thumber v%s (git: %s %s)\n", version, branch, commit)
 
 	return nil
 }
 
 var versionUsage = `Displays the API version, build branch and git commit hash.
-Usage: roove-thumber version
+Usage: cloudive-thumber version
 `

@@ -9,7 +9,7 @@ import (
 	"github.com/BurntSushi/toml"
 )
 
-// PrintConfigCommand represents the command executed by "roove-thumber config".
+// PrintConfigCommand represents the command executed by "cloudive-thumber config".
 type PrintConfigCommand struct {
 	Stdin  io.Reader
 	Stdout io.Writer
@@ -49,7 +49,7 @@ func (cmd *PrintConfigCommand) Run(args ...string) error {
 
 	// Validate the configuration.
 	if err := config.Validate(); err != nil {
-		return fmt.Errorf("%s. To generate a valid configuration file run `roove-thumber config > roove.generated.conf`", err)
+		return fmt.Errorf("%s. To generate a valid configuration file run `cloudive-thumber config > cloudive.generated.conf`", err)
 	}
 
 	toml.NewEncoder(cmd.Stdout).Encode(config)
@@ -79,11 +79,11 @@ func (cmd *PrintConfigCommand) parseConfig(path string) (*Config, error) {
 }
 
 var printConfigUsage = `Displays the default configuration.
-Usage: roove-thumber<prg> config [flags]
+Usage: cloudive-thumber<prg> config [flags]
     -config <path>
             Set the path to the initial configuration file.
-            This defaults to the environment variable ROOVE_CONFIG_PATH,
-            ~/.roove/thumber.conf, or /etc/roove/thumber.conf if a file
+            This defaults to the environment variable CLOUDIVE_CONFIG_PATH,
+            ~/.cloudive/thumber.conf, or /etc/cloudive/thumber.conf if a file
             is present at any of these locations.
             Disable the automatic loading of a configuration file using
             the null device (such as /dev/null).

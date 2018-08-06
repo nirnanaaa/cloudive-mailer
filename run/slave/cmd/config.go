@@ -17,7 +17,7 @@ import (
 	"github.com/BurntSushi/toml"
 )
 
-// Config represents the configuration format for the roove binary.
+// Config represents the configuration format for the cloudive binary.
 type Config struct {
 	Kafka *kafka.Config `toml:"kafka"`
 	Meta  *meta.Config  `toml:"meta"`
@@ -79,5 +79,5 @@ func (c *Config) Validate() error {
 
 // ApplyEnvOverrides apply the environment configuration on top of the config.
 func (c *Config) ApplyEnvOverrides(getenv func(string) string) error {
-	return itoml.ApplyEnvOverrides(getenv, "ROOVE", c)
+	return itoml.ApplyEnvOverrides(getenv, "CLOUDIVE", c)
 }

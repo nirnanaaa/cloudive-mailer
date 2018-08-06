@@ -21,7 +21,7 @@ type Service interface {
 	Stop() error
 }
 
-// Command represents the command executed by "roove-thumber run".
+// Command represents the command executed by "cloudive-thumber run".
 type Command struct {
 	Version   string
 	Branch    string
@@ -89,7 +89,7 @@ func (cmd *Command) Run(args ...string) error {
 
 	// Validate the configuration.
 	if err := config.Validate(); err != nil {
-		return fmt.Errorf("%s. To generate a valid configuration file run `roove-thumber config > roove-thumber.generated.conf`", err)
+		return fmt.Errorf("%s. To generate a valid configuration file run `cloudive-thumber config > cloudive-thumber.generated.conf`", err)
 	}
 	level, err := log.ParseLevel(config.Meta.LogLevel)
 	if err != nil {
@@ -137,12 +137,12 @@ type Options struct {
 	Action     string
 }
 
-var usage = `Runs the roove-thumber Listener server.
-Usage: roove-thumber<cmd> run [flags]
+var usage = `Runs the cloudive-thumber Listener server.
+Usage: cloudive-thumber<cmd> run [flags]
     -config <path>
             Set the path to the configuration file.
-            This defaults to the environment variable ROOVE_CONFIG_PATH,
-            ~/.roove/thumber.conf, or /etc/roove/thumber.conf if a file
+            This defaults to the environment variable CLOUDIVE_CONFIG_PATH,
+            ~/.cloudive/thumber.conf, or /etc/cloudive/thumber.conf if a file
             is present at any of these locations.
             Disable the automatic loading of a configuration file using
             the null device (such as /dev/null).
@@ -186,23 +186,23 @@ func (cmd *Command) ParseConfig(path string) (*Config, error) {
 // GetConfigPath returns the config path from the options.
 // It will return a path by searching in this order:
 //   1. The CLI option in ConfigPath
-//   2. The environment variable ROOVE_CONFIG_PATH
+//   2. The environment variable CLOUDIVE_CONFIG_PATH
 //   3. The first thumber.conf file on the path:
-//        - ~/.roove
-//        - /etc/roove
+//        - ~/.cloudive
+//        - /etc/cloudive
 func (opt *Options) GetConfigPath() string {
 	if opt.ConfigPath != "" {
 		if opt.ConfigPath == os.DevNull {
 			return ""
 		}
 		return opt.ConfigPath
-	} else if envVar := os.Getenv("ROOVE_CONFIG_PATH"); envVar != "" {
+	} else if envVar := os.Getenv("CLOUDIVE_CONFIG_PATH"); envVar != "" {
 		return envVar
 	}
 
 	for _, path := range []string{
-		os.ExpandEnv("${HOME}/.roove/thumber.conf"),
-		"/etc/roove/thumber.conf",
+		os.ExpandEnv("${HOME}/.cloudive/thumber.conf"),
+		"/etc/cloudive/thumber.conf",
 	} {
 		if _, err := os.Stat(path); err == nil {
 			return path
