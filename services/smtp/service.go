@@ -4,11 +4,9 @@ import (
 	"fmt"
 	"io"
 	"mime"
-	"net/http"
 	"net/mail"
-	"net/url"
-	"time"
 
+	"github.com/nirnanaaa/cloudive-mailer/services/kafka/event"
 	"github.com/sirupsen/logrus"
 
 	gomail "gopkg.in/gomail.v2"
@@ -48,36 +46,10 @@ func formatEmail(name, email string) string {
 	return s
 }
 
-func (s *Service) DownloadAttachment(url string) (io.Reader, error) {
-	resp, err := http.Get(url)
-	if err != nil {
-		return nil, err
-	}
-	return resp.Body, nil
-}
-
-// CheckAttachmentForDomainWhitelist checks if a requesting domain is whitelisted inside our config.
-func (s *Service) CheckAttachmentForDomainWhitelist(inputURL string) error {
-	u, err := url.Parse(inputURL)
-	if err != nil {
-		return err
-	}
-	hostname := u.Hostname()
-	for _, entry := range s.Config.DomainWhitelist {
-		if hostname == entry {
-			return nil
-		}
-	}
-	return fmt.Errorf("Domain %s is not whitelisted", hostname)
-}
-
-// TODO: Replace with re-queueing
-func (s *Service) Deliver(u *OutboundEmailEvent, tries int) {
+// Deliver performs all necessary operations to send an outgoing email via SMTP
+func (s *Service) Deliver(u *event.InboundEmailEvent) error {
 	if !s.Config.Enabled {
-		return
-	}
-	if tries > 10 {
-		return
+		return fmt.Errorf("SMTP Service is not enabled, we're not delivering any emails")
 	}
 
 	d := NewDialer(s.Config.Hostname, s.Config.Port, s.Config.Username, s.Config.Password)
@@ -109,12 +81,7 @@ func (s *Service) Deliver(u *OutboundEmailEvent, tries int) {
 		}))
 	}
 
-	if err := d.DialAndSend(m); err != nil {
-		time.Sleep(time.Duration(tries*tries) * time.Second)
-		logrus.WithError(err).Errorf("trying next delivery in %ds", tries*tries)
-		s.Deliver(u, tries+1)
-		return
-	}
+	return d.DialAndSend(m)
 }
 
 // SetLogOutput sets the writer to which all logs are written. It must not be

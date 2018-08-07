@@ -6,6 +6,7 @@ import (
 
 	"github.com/Shopify/sarama"
 	"github.com/movio/kasper"
+	"github.com/nirnanaaa/cloudive-mailer/services/kafka/event"
 	"github.com/nirnanaaa/cloudive-mailer/services/smtp"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/sirupsen/logrus"
@@ -44,20 +45,29 @@ func (processor *S3Processor) Process(msgs []*sarama.ConsumerMessage, sender kas
 	return nil
 }
 
-// FetchMetaForFileKey fetches head data from s3 and outputs them
-func (processor *S3Processor) FetchMetaForFileKey(key, bucket string) (Meta, error) {
-	var meta Meta
-	return meta, nil
+type MailMessageMetadata struct {
+	Tries int `json:"tries"`
 }
 
 // ProcessMessage processes an incomming message
 func (processor *S3Processor) ProcessMessage(msg *sarama.ConsumerMessage, sender kasper.Sender) error {
 	// l := processor.Logger
-	var decoded smtp.OutboundEmailEvent
+	var decoded event.InboundEmailEvent
 	if err := json.Unmarshal(msg.Value, &decoded); err != nil {
 		return err
 	}
-	processor.SMTP.Deliver(&decoded, 0)
+
+	// re-queue
+	if err := processor.SMTP.Deliver(&decoded); err != nil {
+		outgoingMessage := &sarama.ProducerMessage{
+			Topic:     processor.OutputTopicName,
+			Partition: 0,
+			Key:       sarama.ByteEncoder(msg.Key),
+			Value:     sarama.ByteEncoder(msg.Value),
+		}
+		sender.Send(outgoingMessage)
+		return err
+	}
 	// processor.SMTP.
 	return nil
 }

@@ -5,6 +5,7 @@ import (
 
 	"github.com/Shopify/sarama"
 	"github.com/movio/kasper"
+	"github.com/nirnanaaa/cloudive-mailer/services/kafka/event"
 	"github.com/nirnanaaa/cloudive-mailer/services/smtp"
 	"github.com/prometheus/client_golang/prometheus"
 	uuid "github.com/satori/go.uuid"
@@ -57,9 +58,9 @@ func (s *Service) Connect() error {
 }
 
 // QueueMail queues a message into our internal kafka queue
-func (s *Service) QueueMail(msg *InboundEmailEvent) error {
+func (s *Service) QueueMail(msg *event.InboundEmailEvent) error {
 	s.Logger.Debugf("Delivering email with Trace ID %s", msg.TraceID)
-	encoded, err := EncodeOutgoingEvent(msg)
+	encoded, err := event.EncodeOutgoingEvent(msg)
 	if err != nil {
 		return err
 	}

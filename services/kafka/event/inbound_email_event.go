@@ -1,4 +1,6 @@
-package kafka
+package event
+
+import "encoding/json"
 
 type Attachment struct {
 	Name string `json:"name"`
@@ -24,4 +26,22 @@ type InboundEmailEvent struct {
 
 	// Just the download references. not sending high volume data.
 	Attachments []Attachment `json:"attachments"`
+}
+
+// EncodeOutgoingEvent encodes an outgoing kafka event
+func EncodeOutgoingEvent(evt *InboundEmailEvent) ([]byte, error) {
+	data, err := json.Marshal(evt)
+	if err != nil {
+		return []byte{}, err
+	}
+	return data, nil
+}
+
+// DecodeIncomingEvent decodes an incoming kafka event
+func DecodeIncomingEvent(message []byte) (*InboundEmailEvent, error) {
+	var ins InboundEmailEvent
+	if err := json.Unmarshal(message, &ins); err != nil {
+		return nil, err
+	}
+	return &ins, nil
 }

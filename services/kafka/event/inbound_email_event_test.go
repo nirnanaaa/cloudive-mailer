@@ -1,17 +1,17 @@
-package kafka_test
+package event_test
 
 import (
 	"testing"
 
-	"github.com/nirnanaaa/cloudive-mailer/services/kafka"
+	"github.com/nirnanaaa/cloudive-mailer/services/kafka/event"
 )
 
 var expectedOutput = `{"trace_id":"abc","recipient":{"name":"","email":"","tracking_id":""},"sender":{"name":"","email":"","tracking_id":""},"subject":"","payload":null,"attachments":null}`
 
 func TestS3_Encoding(t *testing.T) {
 	// Parse configuration.
-	c := kafka.InboundEmailEvent{TraceID: "abc"}
-	s, err := kafka.EncodeOutgoingEvent(&c)
+	c := event.InboundEmailEvent{TraceID: "abc"}
+	s, err := event.EncodeOutgoingEvent(&c)
 	if err != nil {
 		t.Fatal(err.Error())
 	}
@@ -21,8 +21,8 @@ func TestS3_Encoding(t *testing.T) {
 }
 func TestS3_Decoding(t *testing.T) {
 	// Parse configuration.
-	c := kafka.InboundEmailEvent{TraceID: "abc"}
-	s, err := kafka.DecodeIncomingEvent([]byte(expectedOutput))
+	c := event.InboundEmailEvent{TraceID: "abc"}
+	s, err := event.DecodeIncomingEvent([]byte(expectedOutput))
 	if err != nil {
 		t.Fatal(err.Error())
 	}

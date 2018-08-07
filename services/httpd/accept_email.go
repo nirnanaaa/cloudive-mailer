@@ -5,13 +5,13 @@ import (
 	"errors"
 	"net/http"
 
-	"github.com/nirnanaaa/cloudive-mailer/services/kafka"
+	"github.com/nirnanaaa/cloudive-mailer/services/kafka/event"
 )
 
 func (h *Handler) acceptInboundEmail(w http.ResponseWriter, r *http.Request) {
 	decoder := json.NewDecoder(r.Body)
 
-	var msg kafka.InboundEmailEvent
+	var msg event.InboundEmailEvent
 	if err := decoder.Decode(&msg); err != nil {
 		h.httpError(w, "err.global.invalid_payload", http.StatusBadRequest)
 		return
