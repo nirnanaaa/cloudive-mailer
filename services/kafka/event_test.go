@@ -6,7 +6,7 @@ import (
 	"github.com/nirnanaaa/cloudive-mailer/services/kafka"
 )
 
-var expectedOutput = `{"trace_id":"abc","recipient":{"name":"","email":"","tracking_id":""},"subject":"","payload":null,"attachments":null}`
+var expectedOutput = `{"trace_id":"abc","recipient":{"name":"","email":"","tracking_id":""},"sender":{"name":"","email":"","tracking_id":""},"subject":"","payload":null,"attachments":null}`
 
 func TestS3_Encoding(t *testing.T) {
 	// Parse configuration.
